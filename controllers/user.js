@@ -1,0 +1,177 @@
+const express = require("express");
+const User = require("../models/user");
+const mongoose = require("mongoose");
+
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+exports.createUser = async (req, res) => {
+  try {
+    const user = new User(req.body);
+    const result = await user.save();
+
+    const token = jwt.sign(
+      { id: user._id, role: "user" },
+      process.env.JWT_SECRET,
+      { expiresIn: "365d" }
+    );
+
+    res.status(201).json({
+      message: "Created Successfully",
+      token,
+      result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User retrieved successfully",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      updatedUser,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User deleted successfully",
+      deletedUser,
+    });
+  } catch (err) {
+    res.status(500).json({
+      err,
+    });
+  }
+};
+
+// login
+
+exports.loginUser = async (req, res) => {
+  try {
+    const { phone, password, role } = req.body;
+
+    if (!role || !["user", "supervisor"].includes(role)) {
+      return res.status(400).json({ message: "Invalid or missing role" });
+    }
+
+    const user = await User.findOne({
+      $or: [{ phone: phone }],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (role === "user") {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+
+      const token = jwt.sign(
+        { id: user._id, role: "user" },
+        process.env.JWT_SECRET,
+        { expiresIn: "365d" }
+      );
+
+      return res.status(200).json({
+        message: "User login successful",
+        token,
+        userInfo: {
+          username: user.username,
+          phone: user.phone,
+          id: user._id,
+        },
+      });
+    } else if (role === "supervisor") {
+      if (password !== user.password2) {
+        return res.status(401).json({ message: "Invalid supervisor password" });
+      }
+
+      const token = jwt.sign(
+        { id: user._id, role: "supervisor" },
+        process.env.JWT_SECRET,
+        { expiresIn: "365d" }
+      );
+
+      return res.status(200).json({
+        message: "Supervisor login successful",
+        token,
+        supervisor: {
+          username: user.username,
+          phone: user.phone,
+          id: user._id,
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Something went wrong",
+      error: err.message || err.toString(),
+    });
+  }
+};
