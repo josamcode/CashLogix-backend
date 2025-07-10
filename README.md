@@ -1,4 +1,4 @@
-# To-Do List App - Backend
+# Expenses Management App - Backend
 
 A simple backend for a to-do list and expense tracking app built with Node.js, Express, and MongoDB.
 
