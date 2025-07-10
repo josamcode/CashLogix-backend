@@ -17,16 +17,16 @@ This is the backend part of a full-stack application that allows users to:
 
 ## 🔧 Technologies Used
 
-| Technology     | Description                  |
-|----------------|------------------------------|
-| Node.js        | Runtime environment          |
-| Express.js     | Web framework                |
-| MongoDB        | NoSQL database               |
-| Mongoose       | ODM for MongoDB              |
-| JWT            | Authentication tokens        |
-| Bcryptjs       | Password hashing             |
-| Cors           | Cross-Origin Resource Sharing|
-| Dotenv         | Environment variables        |
+| Technology | Description                   |
+| ---------- | ----------------------------- |
+| Node.js    | Runtime environment           |
+| Express.js | Web framework                 |
+| MongoDB    | NoSQL database                |
+| Mongoose   | ODM for MongoDB               |
+| JWT        | Authentication tokens         |
+| Bcryptjs   | Password hashing              |
+| Cors       | Cross-Origin Resource Sharing |
+| Dotenv     | Environment variables         |
 
 ---
 
@@ -67,11 +67,13 @@ PORT=5000
 ## 🚀 How to Run
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the server:
+
    ```bash
    node index.js
    ```
@@ -87,30 +89,31 @@ PORT=5000
 
 ### 🔐 Authentication (User)
 
-| Method | Route              | Description              | Requires Auth |
-|--------|--------------------|--------------------------|---------------|
-| POST   | `/api/auth/register` | Register new user       | ❌            |
-| POST   | `/api/auth/login`    | Login as user/supervisor| ❌            |
+| Method | Route                | Description              | Requires Auth |
+| ------ | -------------------- | ------------------------ | ------------- |
+| POST   | `/api/auth/register` | Register new user        | ❌            |
+| POST   | `/api/auth/login`    | Login as user/supervisor | ❌            |
 
 ### 👤 User Management
 
-| Method | Route              | Description              | Requires Auth |
-|--------|--------------------|--------------------------|---------------|
-| GET    | `/api/getUser`       | Get current user info   | ✅            |
-| PUT    | `/api/updateUser/:id`| Update user info        | ❌            |
-| DELETE | `/api/deleteUser/:id`| Delete a user           | ❌            |
+| Method | Route                 | Description           | Requires Auth |
+| ------ | --------------------- | --------------------- | ------------- |
+| GET    | `/api/getUser`        | Get current user info | ✅            |
+| PUT    | `/api/updateUser/:id` | Update user info      | ❌            |
+| DELETE | `/api/deleteUser/:id` | Delete a user         | ❌            |
 
 ### 💰 Expense Management
 
-| Method | Route                  | Description                      | Requires Auth |
-|--------|------------------------|----------------------------------|---------------|
-| POST   | `/api/expenses`        | Create new expense               | ✅ (user)     |
-| GET    | `/api/expenses`        | Get all expenses (with filters)  | ✅            |
-| GET    | `/api/expenses/:id`    | Get single expense               | ✅            |
-| PUT    | `/api/expenses/:id`    | Update an expense                | ✅ (user)     |
-| DELETE | `/api/expenses/:id`    | Delete an expense                | ✅ (user)     |
+| Method | Route               | Description                     | Requires Auth |
+| ------ | ------------------- | ------------------------------- | ------------- |
+| POST   | `/api/expenses`     | Create new expense              | ✅ (user)     |
+| GET    | `/api/expenses`     | Get all expenses (with filters) | ✅            |
+| GET    | `/api/expenses/:id` | Get single expense              | ✅            |
+| PUT    | `/api/expenses/:id` | Update an expense               | ✅ (user)     |
+| DELETE | `/api/expenses/:id` | Delete an expense               | ✅ (user)     |
 
 #### Example Filtering:
+
 ```
 GET /api/expenses?from=2025-06-25&to=2025-06-26&category=food
 ```
@@ -123,6 +126,7 @@ GET /api/expenses?from=2025-06-25&to=2025-06-26&category=food
 - **Supervisor**: Has a separate password (`password2`) and can only log in using it.
 
 Middleware used:
+
 - `verifyToken`: Ensures valid JWT token.
 - `allowUserOnly`: Restricts certain operations to regular users only.
 
