@@ -22,7 +22,7 @@ app.use("/api", expenseRoutes);
 app.use("/api", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello In To-do list app");
+  res.send("Hello In CashLogix app");
 });
 
 mongoose
