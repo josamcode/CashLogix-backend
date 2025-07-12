@@ -23,7 +23,7 @@ exports.createUser = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      err,
+      error: err.message || err.toString(),
     });
   }
 };
