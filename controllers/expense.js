@@ -11,8 +11,7 @@ exports.createExpense = async (req, res) => {
 
     let formattedDate;
     if (date) {
-      const [day, month, year] = date.split("-").map(Number);
-      formattedDate = new Date(year, month - 1, day);
+      formattedDate = new Date(date);
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
