@@ -54,59 +54,6 @@ exports.getUser = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json({
-      message: "User updated successfully",
-      updatedUser,
-    });
-  } catch (err) {
-    res.status(400).json({
-      err,
-    });
-  }
-};
-
-exports.deleteUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
-    }
-
-    const deletedUser = await User.findByIdAndDelete(userId);
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json({
-      message: "User deleted successfully",
-      deletedUser,
-    });
-  } catch (err) {
-    res.status(500).json({
-      err,
-    });
-  }
-};
-
 // login
 
 exports.loginUser = async (req, res) => {
