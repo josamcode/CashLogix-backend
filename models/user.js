@@ -8,17 +8,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      minlength: [8, "Username must be at least 8 characters long"],
     },
     phone: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      match: [/^01[0-2,5]{1}[0-9]{8}$/, "invalid phone number"],
     },
     password: {
       type: String,
       required: true,
+      minlength: [8, "Password must be at least 8 characters long"],
     },
     usertype: {
       type: String,

@@ -7,6 +7,28 @@ const jwt = require("jsonwebtoken");
 
 exports.createUser = async (req, res) => {
   try {
+    const { username, phone, password } = req.body;
+
+    if (!username || username.length < 8) {
+      return res.status(400).json({
+        error: "Username must be at least 8 characters long....",
+      });
+    }
+
+    const phoneRegex = /^([1-9][0-9]{10,14})$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      return res.status(400).json({
+        error:
+          "Phone number is invalid. Must be an international number without '+'.",
+      });
+    }
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({
+        error: "Password must be at least 8 characters long.",
+      });
+    }
+
     const user = new User(req.body);
     const result = await user.save();
 
