@@ -30,7 +30,18 @@ const allowUserOnly = (req, res, next) => {
   next();
 };
 
+const allowAdminOnly = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Access denied for this operation." });
+  }
+  next();
+};
+
+
 module.exports = {
   verifyToken,
   allowUserOnly,
+  allowAdminOnly,
 };

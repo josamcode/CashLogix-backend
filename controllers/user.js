@@ -15,11 +15,12 @@ exports.createUser = async (req, res) => {
       });
     }
 
-    const phoneRegex = /^([1-9][0-9]{10,14})$/;
+    const phoneRegex = /^01[0-9]{9}$/;
+
     if (!phone || !phoneRegex.test(phone)) {
       return res.status(400).json({
         error:
-          "Phone number is invalid. Must be an international number without '+'.",
+          "Phone number is invalid. Must be an Egyptian number starting with 01 and 11 digits long.",
       });
     }
 
@@ -77,7 +78,6 @@ exports.getUser = async (req, res) => {
 };
 
 // login
-
 exports.loginUser = async (req, res) => {
   try {
     const { phone, password, role } = req.body;

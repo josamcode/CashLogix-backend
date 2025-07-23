@@ -6,15 +6,15 @@ const {
   // updateUser,
   // deleteUser,
   loginUser,
+  deleteUser,
+  getAllUsers,
 } = require("../controllers/user");
 
-const { verifyToken } = require("../middlewares/auth");
+const { verifyToken, allowAdminOnly } = require("../middlewares/auth");
 
 // POST /createUser
 router.post("/auth/register", createUser);
 router.get("/getUser", verifyToken, getUser);
-// router.put("/updateUser/:id", updateUser);
-// router.delete("/deleteUser/:id", deleteUser);
 router.post("/auth/login", loginUser);
 
 module.exports = router;

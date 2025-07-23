@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      match: [/^01[0-9]{9}$/, "Phone number must be a valid Egyptian number (11 digits starting with 01)"],
     },
     password: {
       type: String,
@@ -23,7 +24,7 @@ const userSchema = new mongoose.Schema(
     },
     usertype: {
       type: String,
-      enum: ["user", "supervisor"],
+      enum: ["user", "supervisor", "admin"],
       default: "user",
     },
     password2: {
