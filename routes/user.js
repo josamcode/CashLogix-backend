@@ -3,11 +3,7 @@ const router = express.Router();
 const {
   createUser,
   getUser,
-  // updateUser,
-  // deleteUser,
   loginUser,
-  deleteUser,
-  getAllUsers,
 } = require("../controllers/user");
 
 const { verifyToken, allowAdminOnly } = require("../middlewares/auth");
