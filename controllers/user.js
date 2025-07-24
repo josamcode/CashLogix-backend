@@ -30,6 +30,13 @@ exports.createUser = async (req, res) => {
       });
     }
 
+    const existingUser = await User.findOne({ phone });
+    if (existingUser) {
+      return res.status(400).json({
+        error: "Phone number is already registered.",
+      });
+    }
+
     const user = new User(req.body);
     const result = await user.save();
 
