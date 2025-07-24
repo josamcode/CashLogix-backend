@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
     password2: {
       type: String,
     },
+    fcmToken: {
+      type: String,
+      default: null
+    },
     expenses: [expenseSchema],
   },
   { timestamps: true }

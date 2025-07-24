@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+require("./notifications/cronJobs");
+
 const expenseRoutes = require("./routes/expense");
 const userRoutes = require("./routes/user");
 
@@ -20,6 +22,9 @@ app.use(express.json());
 
 app.use("/api", expenseRoutes);
 app.use("/api", userRoutes);
+
+const notificationRoutes = require("./routes/notification");
+app.use("/api", notificationRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello In CashLogix app");

@@ -47,3 +47,5 @@ temp/
 
 # Mac system files
 *.DS_Store
+
+firebase-service-account.json

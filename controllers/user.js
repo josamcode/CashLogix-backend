@@ -77,7 +77,6 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// login
 exports.loginUser = async (req, res) => {
   try {
     const { phone, password, role } = req.body;
@@ -141,6 +140,45 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({
       message: "Something went wrong",
       error: err.message || err.toString(),
+    });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ usertype: "user" }).select("-password -password2");
+    res.status(200).json({ length: users.length, users });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get users", error: err.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User deleted successfully",
+      deletedUser: {
+        id: deletedUser._id,
+        username: deletedUser.username,
+        phone: deletedUser.phone,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
     });
   }
 };
