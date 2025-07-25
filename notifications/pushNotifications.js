@@ -24,6 +24,12 @@ try {
       return { success: true, response };
     } catch (error) {
       console.error("Error sending message:", error);
+
+      if (error.code === 'messaging/registration-token-not-registered') {
+        console.log('FCM Token is no longer valid:', token);
+        return { success: false, error: error.message, tokenInvalid: true };
+      }
+
       return { success: false, error: error.message };
     }
   };
