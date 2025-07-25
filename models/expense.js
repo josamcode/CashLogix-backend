@@ -17,6 +17,11 @@ const expenseSchema = new mongoose.Schema(
       required: true,
       default: Date.now,
     },
+    project: {
+      type: String,
+      required: false,
+      default: null
+    },
   },
   { timestamps: true }
 );

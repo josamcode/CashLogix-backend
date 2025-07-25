@@ -3,31 +3,39 @@ const userModel = require("../models/user");
 
 exports.createExpense = async (req, res) => {
   try {
-    const { amount, category, description, date } = req.body;
+    const { amount, category, description, project, date } = req.body;
     const userId = req.user.id;
 
     const user = await userModel.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     let formattedDate;
+    let warningMessage = null;
+
     if (date) {
       formattedDate = new Date(date);
+      formattedDate.setHours(0, 0, 0, 0);
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
       if (formattedDate > today) {
-        return res
-          .status(400)
-          .json({ message: "A date cannot be entered after today." });
+        // Future date – override and warn
+        formattedDate = new Date();
+        formattedDate.setHours(0, 0, 0, 0);
+        warningMessage = "Future date detected. Date has been set to today instead.";
       }
     } else {
+      // No date provided – use today
       formattedDate = new Date();
+      formattedDate.setHours(0, 0, 0, 0);
     }
 
     const expense = {
       amount,
       category,
       description,
+      project,
       date: formattedDate,
     };
 
@@ -37,6 +45,7 @@ exports.createExpense = async (req, res) => {
     res.status(201).json({
       message: "Expense created successfully",
       result: user.expenses[user.expenses.length - 1],
+      ...(warningMessage && { warning: warningMessage }),
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
