@@ -24,11 +24,16 @@ const userSchema = new mongoose.Schema(
     },
     usertype: {
       type: String,
-      enum: ["user", "supervisor", "admin"],
+      enum: ["user", "supervisor", "admin", "entrepreneur"],
       default: "user",
     },
     password2: {
       type: String,
+    },
+    currency: {
+      type: String,
+      enum: ["EGP", "USD", "EUR", "SAR", "AED", "GBP"],
+      default: "EGP",
     },
     fcmToken: {
       type: String,
